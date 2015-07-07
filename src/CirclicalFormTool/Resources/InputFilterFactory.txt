@@ -1,0 +1,30 @@
+<?php
+
+namespace MODULE\Factory\InputFilter;
+
+use MODULE\InputFilter\FORMInputFilter;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\MutableCreationOptionsInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+
+class FORMInputFilterFactory implements FactoryInterface, MutableCreationOptionsInterface
+{
+
+    protected $options;
+
+    /**
+     * Set creation options
+     *
+     * @param  array $options
+     * @return void
+     */
+    public function setCreationOptions( array $options )
+    {
+        $this->options = $options;
+    }
+
+    public function createService( ServiceLocatorInterface $serviceLocator )
+    {
+        return new FORMInputFilter();
+    }
+}

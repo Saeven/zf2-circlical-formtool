@@ -1,0 +1,32 @@
+<?php
+
+namespace MODULE\Form;
+
+use Zend\Form\Element;
+use Zend\Form\Element\Text;
+use Zend\Form\Form;
+use Zend\Form\Element\Button;
+use	Zend\Form\Element\Hidden;
+
+
+class FORMForm  extends Form
+{
+
+    public function init()
+    {
+
+        $this->add([
+            'name' => 'name',
+            'type' => Text::class,
+            'options' => [
+                'label' => _( "" ),
+                'help-block' => _( "" ),
+            ],
+            'attributes' => [
+                'maxlength' => 32,
+            ],
+        ]);
+
+    }
+
+}

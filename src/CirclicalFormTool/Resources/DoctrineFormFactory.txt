@@ -1,0 +1,64 @@
+<?php
+
+namespace MODULE\Factory\Form;
+
+DHYDRATORUSE
+use MODULE\Form\FORMForm;
+use MODULE\InputFilter\FORMInputFilter;
+use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\MutableCreationOptionsInterface;
+
+
+/**
+ * Class ServerFormFactory
+ */
+class FORMFormFactory implements FactoryInterface, MutableCreationOptionsInterface
+{
+	/**
+     * @var array
+     */
+    protected $options;
+
+     /**
+     * Set creation options
+     *
+     * @param  array $options
+     * @return void
+     */
+    public function setCreationOptions( array $options )
+    {
+        $this->options = $options;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        /**
+         * @var \Zend\Form\FormElementManager       $serviceLocator
+         * @var \Zend\ServiceManager\ServiceManager $serviceManager
+         * @var \MODULE\Form\FORM                   $form
+         */
+        $serviceManager = $serviceLocator->getServiceLocator();
+
+        try
+        {
+	        $form      = new FORMForm();
+            $form->setHydrator( new DoctrineObject( $serviceManager->get('doctrine.entitymanager.orm_default'), false ) );
+            $form->setInputFilter( $serviceManager->get('InputFilterManager')->get( FORMInputFilter::class ) );
+	        HYDRATORFORM
+        }
+        catch( \Exception $x )
+        {
+            die( $x->getMessage() );
+        }
+
+
+        return $form;
+    }
+
+
+}
