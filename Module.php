@@ -1,38 +1,7 @@
 <?php
 
-namespace CirclicalFormTool;
-
-use Zend\Console\Adapter\AdapterInterface;
-
-class Module
-{
-
-    public function getConfig()
-    {
-        return include __DIR__ . '/config/module.config.php';
-    }
-
-
-    public function getConsoleUsage(AdapterInterface $console)
-    {
-        return [
-            'formtool create [--doctrine|-d] <module> <form>' => 'Create a form, input filter, and all related elements',
-
-            ['module'           => 'The ZF2 module in which the form set should be created'],
-            ['form'             => 'The name of the form you are creating, e.g. User'],
-            ['--doctrine|-d'    => 'Wire it out as a Doctrine form'],
-            ['object'           => 'The object that is hydrated by this form (you code this separately)'],
-        ];
-    }
-
-    public function getAutoloaderConfig()
-    {
-        return [
-            'Zend\Loader\StandardAutoloader' => [
-                'namespaces' => [
-                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ],
-            ],
-        ];
-    }
-}
+/**
+ * This file is placed here for compatibility with ZendFramework 2's ModuleManager.
+ * It allows usage of this module even without composer.
+ */
+require_once __DIR__ . '/src/CirclicalFormTool/Module.php';
