@@ -117,7 +117,7 @@ class CliController extends AbstractActionController
 		$template = file_get_contents( __DIR__ . '/../Resources/Form.txt' );
 		$template = str_replace( [ 'MODULE', 'FORM' ], [ $this->module, $this->form ], $template );
 
-		mkdir( $dir, 0755, true );
+		@mkdir( $dir, 0755, true );
 		file_put_contents( $dir . "/{$this->form}Form.php", $template );
 	}
 
@@ -144,7 +144,7 @@ class CliController extends AbstractActionController
 			$template
 		);
 
-		mkdir( $dir, 0755, true );
+		@mkdir( $dir, 0755, true );
 		file_put_contents( $dir . "/{$this->form}FormFactory.php", $template );
 	}
 
@@ -154,7 +154,7 @@ class CliController extends AbstractActionController
 		$template = file_get_contents( __DIR__ . '/../Resources/InputFilter.txt' );
 		$template = str_replace( [ 'MODULE', 'FORM' ], [ $this->module, $this->form ], $template );
 
-		mkdir( $dir, 0755, true );
+		@mkdir( $dir, 0755, true );
 		file_put_contents( $dir . "/{$this->form}InputFilter.php", $template );
 	}
 
@@ -165,7 +165,7 @@ class CliController extends AbstractActionController
 		$template = file_get_contents( __DIR__ . '/../Resources/InputFilterFactory.txt' );
 		$template = str_replace( [ 'MODULE', 'FORM' ], [ $this->module, $this->form ], $template );
 
-		mkdir( $dir, 0755, true );
+		@mkdir( $dir, 0755, true );
 		file_put_contents( $dir . "/{$this->form}InputFilterFactory.php", $template );
 	}
 
