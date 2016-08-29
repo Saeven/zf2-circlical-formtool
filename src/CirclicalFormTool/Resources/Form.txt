@@ -9,7 +9,7 @@ use Zend\Form\Element\Button;
 use	Zend\Form\Element\Hidden;
 
 
-class FORMForm  extends Form
+class FORMForm extends Form
 {
 
     public function init()
