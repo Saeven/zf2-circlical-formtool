@@ -6,15 +6,11 @@ DHYDRATORUSE
 use MODULE\Form\FORMForm;
 use MODULE\InputFilter\FORMInputFilter;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\MutableCreationOptionsInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
+use Interop\Container\ContainerInterface;
 
 
-/**
- * Class ServerFormFactory
- */
-class FORMFormFactory implements FactoryInterface, MutableCreationOptionsInterface
+class FORMFormFactory implements FactoryInterface
 {
 	/**
      * @var array

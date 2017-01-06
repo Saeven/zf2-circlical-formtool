@@ -3,22 +3,18 @@
 namespace MODULE\InputFilter;
 
 use Zend\Filter\StringTrim;
-use Zend\I18n\Validator\IsFloat;
 use Zend\InputFilter\InputFilter;
-use Zend\Form\Element;
-use Zend\Validator\Between;
-use Zend\Validator\Digits;
-use Zend\Validator\Hostname;
-use Zend\Validator\Ip;
-use Zend\Validator\StringLength;
 
 class FORMInputFilter extends InputFilter
 {
     public function init()
     {
-
-
+        $this->add([
+            'name' => 'name',
+            'required' => true,
+            'filters' => [
+                ['name' => StringTrim::class],
+            ],
+        ]);
     }
-
-
 }

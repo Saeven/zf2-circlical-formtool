@@ -2,57 +2,20 @@
 
 namespace MODULE\Factory\Form;
 
-HYDRATORUSE
 use MODULE\Form\FORMForm;
 use MODULE\InputFilter\FORMInputFilter;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\MutableCreationOptionsInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Stdlib\Hydrator\ClassMethods;
+use Zend\ServiceManager\Factory\FactoryInterface;
+use Interop\Container\ContainerInterface;
+use Zend\Hydrator\ClassMethods;
 
 
-class FORMFormFactory implements FactoryInterface, MutableCreationOptionsInterface
+class FORMFormFactory implements FactoryInterface
 {
-
-    /**
-     * @var array
-     */
-    protected $options;
-
-     /**
-     * Set creation options
-     *
-     * @param  array $options
-     * @return void
-     */
-    public function setCreationOptions( array $options )
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->options = $options;
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        /**
-         * @var \Zend\Form\FormElementManager       $serviceLocator
-         * @var \Zend\ServiceManager\ServiceManager $serviceManager
-         * @var \MODULE\Form\FORMForm               $form
-         */
-        $serviceManager = $serviceLocator->getServiceLocator();
-        try
-        {
-	        $form      = new FORMForm('FORM');
-            $form->setHydrator( new ClassMethods() );
-            $form->setInputFilter( $serviceManager->get('InputFilterManager')->get( FORMInputFilter::class, $this->options ) );
-            HYDRATORFORM
-        }
-        catch( \Exception $x )
-        {
-            die( $x->getMessage() );
-        }
+        $form = new FORMForm('FORM');
+        $form->setHydrator(new ClassMethods());
+        $form->setInputFilter($container->get('InputFilterManager')->get(FORMInputFilter::class, $options));
 
         return $form;
     }
