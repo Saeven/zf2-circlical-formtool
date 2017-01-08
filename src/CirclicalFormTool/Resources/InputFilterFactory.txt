@@ -3,10 +3,10 @@
 namespace MODULE\Factory\InputFilter;
 
 use Interop\Container\ContainerInterface;
-use SilverStarMember\InputFilter\FORMInputFilter;
+use MODULE\InputFilter\FORMInputFilter;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
-class FORMInputFilterFactory implements FactoryInterface,
+class FORMInputFilterFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

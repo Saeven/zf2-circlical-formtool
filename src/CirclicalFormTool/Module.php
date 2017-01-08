@@ -24,15 +24,4 @@ class Module
             ['object'           => 'The object that is hydrated by this form (you code this separately)'],
         ];
     }
-
-    public function getAutoloaderConfig()
-    {
-        return [
-            'Zend\Loader\StandardAutoloader' => [
-                'namespaces' => [
-                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ],
-            ],
-        ];
-    }
 }
