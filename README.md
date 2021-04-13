@@ -6,6 +6,10 @@ Ok.  Let's face it.  Wiring forms with Laminas takes time.  I do love Zend Frame
 
 It's a CLI tool, is extremely lightweight, and is very simple to use.
 
+## Installation
+
+    composer require --dev saeven/zf2-form-builder
+
 ## Usage
 
 Suppose you wanted to create a FooForm, FooFormFactory, FooInputFilter and FooInputFilterFactory in the Bar module, and wire it all up in your form_elements and input_filters config keys (in Bar).  
