@@ -16,8 +16,8 @@ class FORMForm extends Form
             'name' => 'name',
             'type' => Text::class,
             'options' => [
-                'label' => _( "" ),
-                'help-block' => _( "" ),
+                'label' => _(""),
+                'help-block' => _(""),
             ],
             'attributes' => [
                 'maxlength' => 32,

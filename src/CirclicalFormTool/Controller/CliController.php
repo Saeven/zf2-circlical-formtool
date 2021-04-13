@@ -2,6 +2,8 @@
 
 namespace CirclicalFormTool\Controller;
 
+use Laminas\Config\Config;
+use Laminas\Config\Writer\PhpArray;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Console\Request as ConsoleRequest;
 use Laminas\Console\Exception\RuntimeException;
@@ -68,16 +70,53 @@ class CliController extends AbstractActionController
         $this->generateInputFilter();
         $this->generateInputFilterFactory();
 
-        $str = self::C_SUCCESS . 'Success! Add these lines to your config:' . self::C_RESET . "\n";
-        $str .= self::C_CYAN . '1. form_elements / factories:' . self::C_RESET . "\n";
-        $str .= $this->form . 'Form::class => ' . $this->form . "FormFactory::class,\n\n";
-        $str .= self::C_CYAN . '2. input_filters / factories:' . self::C_RESET . "\n";
-        $str .= $this->form . 'InputFilter::class => ' . $this->form . "InputFilterFactory::class,\n\n";
-        $str .= self::C_CYAN . '3. use statements:' . self::C_RESET . "\n";
-        $str .= "use {$this->module}\\Form\\{$this->form}Form;\n";
-        $str .= "use {$this->module}\\Factory\\Form\\{$this->form}FormFactory;\n";
-        $str .= "use {$this->module}\\InputFilter\\{$this->form}InputFilter;\n";
-        $str .= "use {$this->module}\\Factory\\InputFilter\\{$this->form}InputFilterFactory;\n";
+        //
+        // Write Form
+        //
+
+        $formConfigFile = getcwd() . DIRECTORY_SEPARATOR . "module" . DIRECTORY_SEPARATOR .
+            $this->module . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "forms.config.php";
+
+        $configuration = [];
+        if (file_exists($formConfigFile)) {
+            $configuration = require $formConfigFile;
+        }
+        $config = new Config($configuration, true);
+        if (!$config->factories) {
+            $config->factories = [];
+        }
+
+        $formFQN = sprintf('%s\\Form\\%sForm', $this->module, $this->form);
+        $formFactoryFQN = sprintf('%s\\Factory\\Form\\%sFormFactory', $this->module, $this->form);
+        $config->factories->$formFQN = $formFactoryFQN;
+
+        $writer = new PhpArray();
+        $writer->setUseBracketArraySyntax(true);
+        $writer->setUseClassNameScalars(true);
+        $writer->toFile($formConfigFile, $config, true);
+
+        //
+        // Write InputFilter
+        //
+
+        $filterConfigFile = getcwd() . DIRECTORY_SEPARATOR . "module" . DIRECTORY_SEPARATOR .
+            $this->module . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "inputfilters.config.php";
+
+        $filterConfiguration = [];
+        if (file_exists($filterConfigFile)) {
+            $filterConfiguration = require $filterConfigFile;
+        }
+        $config = new Config($filterConfiguration, true);
+        if (!$config->factories) {
+            $config->factories = [];
+        }
+
+        $filterFQN = sprintf('%s\\InputFilter\\%sInputFilter', $this->module, $this->form);
+        $filterFactoryFQN = sprintf('%s\\Factory\\InputFilter\\%sInputFilterFactory', $this->module, $this->form);
+        $config->factories->$filterFQN = $filterFactoryFQN;
+
+        $writer->toFile($filterConfigFile, $config, true);
+        $str = self::C_SUCCESS . 'Success! Your form configurations have been successfully edited.' . self::C_RESET . "\n";
 
         return $str;
     }
@@ -88,7 +127,7 @@ class CliController extends AbstractActionController
         $template = file_get_contents(__DIR__ . '/../Resources/Form.txt');
         $template = str_replace(['MODULE', 'FORM'], [$this->module, $this->form], $template);
 
-        if (!mkdir($dir, 0755, true) && !is_dir($dir)) {
+        if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
         file_put_contents($dir . "/{$this->form}Form.php", $template, LOCK_EX);
@@ -117,7 +156,7 @@ class CliController extends AbstractActionController
             $template
         );
 
-        if (!mkdir($dir, 0755, true) && !is_dir($dir)) {
+        if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
         file_put_contents($dir . "/{$this->form}FormFactory.php", $template, LOCK_EX);
@@ -129,7 +168,7 @@ class CliController extends AbstractActionController
         $template = file_get_contents(__DIR__ . '/../Resources/InputFilter.txt');
         $template = str_replace(['MODULE', 'FORM'], [$this->module, $this->form], $template);
 
-        if (!mkdir($dir, 0755, true) && !is_dir($dir)) {
+        if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
         file_put_contents($dir . "/{$this->form}InputFilter.php", $template, LOCK_EX);
@@ -141,7 +180,7 @@ class CliController extends AbstractActionController
         $template = file_get_contents(__DIR__ . '/../Resources/InputFilterFactory.txt');
         $template = str_replace(['MODULE', 'FORM'], [$this->module, $this->form], $template);
 
-        if (!mkdir($dir, 0755, true) && !is_dir($dir)) {
+        if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
         file_put_contents($dir . "/{$this->form}InputFilterFactory.php", $template, LOCK_EX);
