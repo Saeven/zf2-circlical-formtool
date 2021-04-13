@@ -2,8 +2,8 @@
 
 namespace MODULE\InputFilter;
 
-use Zend\Filter\StringTrim;
-use Zend\InputFilter\InputFilter;
+use Laminas\Filter\StringTrim;
+use Laminas\InputFilter\InputFilter;
 
 class FORMInputFilter extends InputFilter
 {

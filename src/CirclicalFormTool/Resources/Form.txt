@@ -2,19 +2,16 @@
 
 namespace MODULE\Form;
 
-use Zend\Form\Element;
-use Zend\Form\Element\Text;
-use Zend\Form\Form;
-use Zend\Form\Element\Button;
-use	Zend\Form\Element\Hidden;
-
+use Laminas\Form\Element;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Form;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Hidden;
 
 class FORMForm extends Form
 {
-
     public function init()
     {
-
         $this->add([
             'name' => 'name',
             'type' => Text::class,
@@ -26,7 +23,5 @@ class FORMForm extends Form
                 'maxlength' => 32,
             ],
         ]);
-
     }
-
 }

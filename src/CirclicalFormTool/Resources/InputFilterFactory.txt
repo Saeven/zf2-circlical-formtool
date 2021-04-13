@@ -4,7 +4,7 @@ namespace MODULE\Factory\InputFilter;
 
 use Interop\Container\ContainerInterface;
 use MODULE\InputFilter\FORMInputFilter;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class FORMInputFilterFactory implements FactoryInterface
 {

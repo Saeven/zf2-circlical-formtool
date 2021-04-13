@@ -4,9 +4,9 @@ namespace MODULE\Factory\Form;
 
 use MODULE\Form\FORMForm;
 use MODULE\InputFilter\FORMInputFilter;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
-use Zend\Hydrator\ClassMethods;
+use Laminas\Hydrator\ClassMethods;
 
 
 class FORMFormFactory implements FactoryInterface
