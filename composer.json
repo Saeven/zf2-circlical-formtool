@@ -22,7 +22,6 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^7.4",
-        "phpspec/phpspec": "7.0.1",
         "laminas/laminas-servicemanager": "^3.0.1",
         "laminas/laminas-form": "@stable",
         "laminas/laminas-mvc-console": "@stable",
