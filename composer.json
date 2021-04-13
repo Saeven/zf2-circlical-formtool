@@ -1,15 +1,14 @@
 {
     "name": "saeven/zf2-form-builder",
-    "description": "Command-line form generator for Zend Framework 3. Huge timesaver!",
+    "description": "Command-line form generator for Laminas. Sparks joy.",
     "type": "library",
     "license": "MIT",
     "homepage": "https://github.com/Saeven/zf2-circlical-formtool",
     "keywords": [
-        "zf2",
+        "laminas",
         "generate",
         "form",
         "forms",
-        "zend framework"
     ],
     "authors": [
         {
