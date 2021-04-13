@@ -42,7 +42,7 @@ Were you to execute this command, it would create:
 
 PLUS it'll write configs for you in module/ModuleName/config/forms.config.php and inputfilters.config.php.
 
-## Don't be Lazy
+## Successfully Achieve 98% Lazy
 
 All you have to do, is pull those config files into your module.config.php like so:
 
