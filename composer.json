@@ -8,7 +8,7 @@
         "laminas",
         "generate",
         "form",
-        "forms",
+        "forms"
     ],
     "authors": [
         {
