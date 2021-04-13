@@ -1,5 +1,7 @@
 # Laminas Form Writer
 
+[![Latest Stable Version](https://poser.pugx.org/saeven/zf2-form-builder/v)](//packagist.org/packages/saeven/zf2-form-builder) [![Total Downloads](https://poser.pugx.org/saeven/zf2-form-builder/downloads)](//packagist.org/packages/saeven/zf2-form-builder) [![Latest Unstable Version](https://poser.pugx.org/saeven/zf2-form-builder/v/unstable)](//packagist.org/packages/saeven/zf2-form-builder) [![License](https://poser.pugx.org/saeven/zf2-form-builder/license)](//packagist.org/packages/saeven/zf2-form-builder)
+
 Ok.  Let's face it.  Wiring forms with Laminas takes time.  I do love Zend Framework and Laminas, but Forms are awful.  I built this form helper to spark a little joy.  Forms are just less terrible with this in my composer.json, and in yours too.
 
 It's a CLI tool, is extremely lightweight, and is very simple to use.
