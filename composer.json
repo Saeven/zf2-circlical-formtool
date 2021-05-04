@@ -1,34 +1,35 @@
 {
-    "name": "saeven/zf2-form-builder",
-    "description": "Command-line form generator for Laminas. Sparks joy.",
-    "type": "library",
-    "license": "MIT",
-    "homepage": "https://github.com/Saeven/zf2-circlical-formtool",
-    "keywords": [
-        "laminas",
-        "generate",
-        "form",
-        "forms"
-    ],
-    "authors": [
-        {
-            "name": "Alexandre Lemaire",
-            "email": "alemaire@circlical.com",
-            "homepage": "http://circlical.com/",
-            "role": "Developer"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "php": "^7.4",
-        "laminas/laminas-servicemanager": "^3.0.1",
-        "laminas/laminas-form": "@stable",
-        "laminas/laminas-mvc-console": "@stable",
-        "laminas/laminas-config": "^3.5"
-    },
-    "autoload": {
-        "psr-0": {
-            "CirclicalFormTool\\": "src/"
-        }
+  "name": "saeven/zf2-form-builder",
+  "description": "Command-line form generator for Laminas. Sparks joy.",
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://github.com/Saeven/zf2-circlical-formtool",
+  "keywords": [
+    "laminas",
+    "generate",
+    "form",
+    "forms"
+  ],
+  "authors": [
+    {
+      "name": "Alexandre Lemaire",
+      "email": "alemaire@circlical.com",
+      "homepage": "http://circlical.com/",
+      "role": "Developer"
     }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": "^7.4 || >=8",
+    "laminas/laminas-servicemanager": "*",
+    "laminas/laminas-form": "*",
+    "laminas/laminas-cli": "1.0.2",
+    "laminas/laminas-config": "*",
+    "laminas/laminas-config-aggregator": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Circlical\\LaminasTools\\": "src/"
+    }
+  }
 }

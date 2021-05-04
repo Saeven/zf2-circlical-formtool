@@ -13,7 +13,7 @@ class FORMFormFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $form = new PickleForm('FORMForm', $options);
+        $form = new FORMForm('FORMForm', $options);
         $form->setHydrator(new DoctrineObject($container->get('doctrine.entitymanager.orm_default'), false));
         $form->setInputFilter($container->get('InputFilterManager')->get(FORMInputFilter::class, $options));
 

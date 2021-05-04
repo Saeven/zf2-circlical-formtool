@@ -18,18 +18,10 @@ Suppose you wanted to create a FooForm, FooFormFactory, FooInputFilter and FooIn
 
 Well, this tool turns all that into a one-liner.
 
-**With Doctrine Entity as Target**
-
 ```
-php public/index.php formtool create --doctrine Bar Foo EntityName
+vendor/bin/laminas ct:create-form
 ```
-
-**Or, Sans Doctrine**
-```
-php public/index.php formtool create Bar Foo User
-```
-
-(the --doctrine or -d for short, is optional)
+Answer the questions, and you're off to the races.
 
 ## What It Does
 
