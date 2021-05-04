@@ -10,6 +10,8 @@ It's a CLI tool, is extremely lightweight, and is very simple to use.
 
     composer require --dev saeven/zf2-form-builder
 
+Then, add it to your application.config.php (laminas-mvc) with `Circlical\LaminasTools`.
+
 ## Usage
 
 Suppose you wanted to create a FooForm, FooFormFactory, FooInputFilter and FooInputFilterFactory in the Bar module, and wire it all up in your form_elements and input_filters config keys (in Bar).  
@@ -44,3 +46,7 @@ All you have to do, is pull those config files into your module.config.php like 
 How's that for service!  You can kick up your feet, tinker with your Pomodoro timer and rake in that same hourly wage with a maximized degree of relaxation.
 
 This tool has been a huge timesaver for me, but please feel free to recommend improvements!  I also accept cookie recipes.
+
+### Some Notes
+
+Uses PSR-4 names now, not the old-school ZF long path names that had module names repeated. It will write classes accordingly. 
