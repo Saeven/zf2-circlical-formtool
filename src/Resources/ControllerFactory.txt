@@ -4,6 +4,7 @@ namespace MODULE\Factory\Controller;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use MODULE\Controller\CONTROLLERController;
 
 class CONTROLLERControllerFactory implements FactoryInterface
 {
