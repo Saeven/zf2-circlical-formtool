@@ -10,6 +10,10 @@ THEN, it'll open them in your PHPStorm (or whatever else).
 
 It's a CLI tool, is extremely lightweight, and is very simple to use.
 
+
+https://user-images.githubusercontent.com/887224/117239821-79662300-adfd-11eb-88f7-3cd53bcdeaec.mov
+
+
 ## Installation
 
     composer require --dev saeven/zf2-form-builder
