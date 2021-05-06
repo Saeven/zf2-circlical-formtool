@@ -8,6 +8,12 @@ class Module
 {
     public function getConfig(): array
     {
-        return (new ConfigProvider())();
+        $configProvider = new ConfigProvider();
+        $options = require __DIR__ . "/../config/autoload/console.global.php";
+
+        return array_merge([
+            'laminas-cli' => $configProvider->getConsoleConfig(),
+            'service_manager' => $configProvider->getDependencies(),
+        ], $options);
     }
 }
