@@ -66,7 +66,7 @@ final class FormWriter implements WriterInterface
     private function generateFormFactory(Table $table): string
     {
         $dir = Utilities::getSourceFolderForModule($this->module, ['Factory', 'Form']);
-        $formFactoryFile = $dir . "/{$this->form}FormFactory.php";
+        $formFactoryFile = $dir . "{$this->form}FormFactory.php";
 
         if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
@@ -101,7 +101,7 @@ final class FormWriter implements WriterInterface
     private function generateInputFilter(Table $table): string
     {
         $dir = Utilities::getSourceFolderForModule($this->module, ['InputFilter']);
-        $inputFilterFile = $dir . "/{$this->form}InputFilter.php";
+        $inputFilterFile = $dir . "{$this->form}InputFilter.php";
 
         if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
@@ -118,7 +118,7 @@ final class FormWriter implements WriterInterface
     private function generateInputFilterFactory(Table $table): string
     {
         $dir = Utilities::getSourceFolderForModule($this->module, ['Factory', 'InputFilter']);
-        $inputFilterFactoryFile = $dir . "/{$this->form}InputFilterFactory.php";
+        $inputFilterFactoryFile = $dir . "{$this->form}InputFilterFactory.php";
 
         if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
@@ -137,7 +137,11 @@ final class FormWriter implements WriterInterface
         //
         // Write Form
         //
-        $formConfigDirectory = Utilities::getSourceFolderForModule($this->module, ['config']);
+        $formConfigDirectory = sprintf(
+            "%s%s/config/",
+            Utilities::getModulesFolder(),
+            $this->module
+        );
 
         if (!@mkdir($formConfigDirectory, 0755, true) && !is_dir($formConfigDirectory)) {
             throw new \RuntimeException(sprintf('Directory "%s" could not be created', $formConfigDirectory));

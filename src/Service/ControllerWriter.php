@@ -99,7 +99,11 @@ final class ControllerWriter implements WriterInterface
 
     private function writeConfig(Table $table): void
     {
-        $configDirectory = Utilities::getSourceFolderForModule($this->module, ['config']);
+        $configDirectory = sprintf(
+            "%s%s/config/",
+            Utilities::getModulesFolder(),
+            $this->module
+        );
 
         if (!@mkdir($configDirectory, 0755, true) && !is_dir($configDirectory)) {
             throw new \RuntimeException(sprintf('Directory "%s" could not be created', $configDirectory));
