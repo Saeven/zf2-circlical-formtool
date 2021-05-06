@@ -4,50 +4,76 @@ declare(strict_types=1);
 
 namespace Circlical\LaminasTools\Service;
 
+use Circlical\LaminasTools\Provider\WriterInterface;
 use Laminas\Config\Config;
 use Laminas\Config\Writer\PhpArray;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Output\OutputInterface;
 
-final class FormWriter
+final class FormWriter implements WriterInterface
 {
     private string $module;
     private string $form;
-    private ?string $class;
+    private ?string $hydrateClass;
     private bool $doctrine;
 
-    public function __construct(string $module, string $form, bool $doctrine, ?string $class)
+
+    public function __construct(string $module, string $form, bool $doctrine, ?string $hydrateClass)
     {
         $this->module = $module;
         $this->form = $form;
-        $this->class = $class;
+        $this->hydrateClass = $hydrateClass;
         $this->doctrine = $doctrine;
     }
 
-    public function write(): void
+
+    public function write(OutputInterface $output): array
     {
-        $this->generateForm();
-        $this->generateFormFactory();
-        $this->generateInputFilter();
-        $this->generateInputFilterFactory();
+        $table = new Table($output);
+        $table->setStyle('box');
+        $table->setHeaders(['Component', 'Status', 'Location']);
+
+        $files = [
+            $this->generateForm($table),
+            $this->generateFormFactory($table),
+            $this->generateInputFilter($table),
+            $this->generateInputFilterFactory($table),
+        ];
         $this->writeConfig();
+        $table->render();
+
+        return $files;
     }
 
-    private function generateForm(): void
+
+    private function generateForm(Table $table): string
     {
-        $dir = getcwd() . "/module/{$this->module}/src/Form";
-        $template = file_get_contents(__DIR__ . '/../Resources/Form.txt');
-        $template = str_replace(['MODULE', 'FORM'], [$this->module, $this->form], $template);
+        $dir = Utilities::getSourceFolderForModule($this->module, ['Form']);
+        $formFile = $dir . "{$this->form}Form.php";
+
+        if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
+            throw new \RuntimeException(sprintf('Directory "%s" could not be created; permissions issue?', $dir));
+        }
+
+        $template = Utilities::parseTemplate('Form', ['MODULE', 'FORM'], [$this->module, $this->form]);
+        file_put_contents($formFile, $template, LOCK_EX);
+        $table->addRow(['Form', '<fg=green;options=bold>created</>', Utilities::modulePath($formFile)]);
+
+        return $formFile;
+    }
+
+
+    private function generateFormFactory(Table $table): string
+    {
+        $dir = Utilities::getSourceFolderForModule($this->module, ['Factory', 'Form']);
+        $formFactoryFile = $dir . "/{$this->form}FormFactory.php";
 
         if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
-        file_put_contents($dir . "/{$this->form}Form.php", $template, LOCK_EX);
-    }
 
-    private function generateFormFactory(): void
-    {
-        $dir = getcwd() . "/module/{$this->module}/src/Factory/Form";
-        $template = file_get_contents(__DIR__ . '/../Resources/' . ($this->doctrine ? 'Doctrine' : '') . 'FormFactory.txt');
-        $template = str_replace(
+        $template = Utilities::parseTemplate(
+            $this->doctrine ? 'DoctrineFormFactory' : 'FormFactory',
             [
                 'HYDRATORFORM',
                 'DHYDRATORUSE',
@@ -56,53 +82,62 @@ final class FormWriter
                 'FORM',
             ],
             [
-                $this->class ? '$form->setObject( new ' . $this->class . '() );' : '',
-                $this->class ? 'use ' . $this->module . '\\Entity\\' . $this->class . ';' : '',
-                $this->class ? 'use ' . $this->module . '\\Model\\' . $this->class . ';' : '',
+                $this->hydrateClass ? '$form->setObject( new ' . $this->hydrateClass . '() );' : '',
+                $this->hydrateClass ? 'use ' . $this->module . '\\Entity\\' . $this->hydrateClass . ';' : '',
+                $this->hydrateClass ? 'use ' . $this->module . '\\Model\\' . $this->hydrateClass . ';' : '',
                 $this->module,
                 $this->form,
 
             ],
-            $template
         );
 
-        if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
-        }
-        file_put_contents($dir . "/{$this->form}FormFactory.php", $template, LOCK_EX);
+        file_put_contents($formFactoryFile, $template, LOCK_EX);
+        $table->addRow(['Form Factory', '<fg=green;options=bold>created</>', Utilities::modulePath($formFactoryFile)]);
+
+        return $formFactoryFile;
     }
 
-    private function generateInputFilter(): void
+
+    private function generateInputFilter(Table $table): string
     {
-        $dir = getcwd() . "/module/{$this->module}/src/InputFilter";
-        $template = file_get_contents(__DIR__ . '/../Resources/InputFilter.txt');
-        $template = str_replace(['MODULE', 'FORM'], [$this->module, $this->form], $template);
+        $dir = Utilities::getSourceFolderForModule($this->module, ['InputFilter']);
+        $inputFilterFile = $dir . "/{$this->form}InputFilter.php";
 
         if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
-        file_put_contents($dir . "/{$this->form}InputFilter.php", $template, LOCK_EX);
+
+        $template = Utilities::parseTemplate('InputFilter', ['MODULE', 'FORM'], [$this->module, $this->form]);
+        file_put_contents($inputFilterFile, $template, LOCK_EX);
+        $table->addRow(['InputFilter', '<fg=green;options=bold>created</>', Utilities::modulePath($inputFilterFile)]);
+
+        return $inputFilterFile;
     }
 
-    private function generateInputFilterFactory(): void
+
+    private function generateInputFilterFactory(Table $table): string
     {
-        $dir = getcwd() . "/module/{$this->module}/src/Factory/InputFilter";
-        $template = file_get_contents(__DIR__ . '/../Resources/InputFilterFactory.txt');
-        $template = str_replace(['MODULE', 'FORM'], [$this->module, $this->form], $template);
+        $dir = Utilities::getSourceFolderForModule($this->module, ['Factory', 'InputFilter']);
+        $inputFilterFactoryFile = $dir . "/{$this->form}InputFilterFactory.php";
 
         if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
-        file_put_contents($dir . "/{$this->form}InputFilterFactory.php", $template, LOCK_EX);
+
+        $template = Utilities::parseTemplate('InputFilterFactory', ['MODULE', 'FORM'], [$this->module, $this->form]);
+        file_put_contents($inputFilterFactoryFile, $template, LOCK_EX);
+        $table->addRow(['InputFilter Factory', '<fg=green;options=bold>created</>', Utilities::modulePath($inputFilterFactoryFile)]);
+
+        return $inputFilterFactoryFile;
     }
+
 
     private function writeConfig(): void
     {
         //
         // Write Form
         //
-        $formConfigDirectory = $formConfigFile = getcwd() . DIRECTORY_SEPARATOR . "module" . DIRECTORY_SEPARATOR .
-            $this->module . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR;
+        $formConfigDirectory = Utilities::getSourceFolderForModule($this->module, ['config']);
 
         if (!@mkdir($formConfigDirectory, 0755, true) && !is_dir($formConfigDirectory)) {
             throw new \RuntimeException(sprintf('Directory "%s" could not be created', $formConfigDirectory));
@@ -132,8 +167,7 @@ final class FormWriter
         // Write InputFilter
         //
 
-        $filterConfigFile = getcwd() . DIRECTORY_SEPARATOR . "module" . DIRECTORY_SEPARATOR .
-            $this->module . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "inputfilters.config.php";
+        $filterConfigFile = $formConfigDirectory . "inputfilters.config.php";
 
         $filterConfiguration = [];
         if (is_file($filterConfigFile)) {
@@ -150,6 +184,4 @@ final class FormWriter
 
         $writer->toFile($filterConfigFile, $config, true);
     }
-
 }
-

@@ -1,0 +1,13 @@
+<?php
+
+namespace MODULE\Controller;
+
+use Laminas\Mvc\Controller\AbstractActionController;
+
+class CONTROLLERController extends AbstractActionController
+{
+    public function __construct()
+    {
+
+    }
+}

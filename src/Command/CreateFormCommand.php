@@ -11,50 +11,22 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
-class CreateFormCommand extends Command
+class CreateFormCommand extends AbstractCommand
 {
     protected static $defaultName = "ct:create-form";
 
-    protected function configure()
-    {
-        $this->setName('create-form');
-        $this->setDescription("Create and wire a Laminas Form.");
-        $this->setHelp("Wires a form directly into config, and writes the boilerplate code for you.");
-
-        $this->addOption(
-            'module',
-            'm',
-            InputOption::VALUE_REQUIRED,
-            'In which laminas-mvc module should your form be created?',
-        );
-
-        $this->addOption(
-            'form',
-            'f',
-            InputOption::VALUE_REQUIRED,
-            'What should the form be called? The helper will automatically add "Form" as suffix.',
-        );
-
-        $this->addOption(
-            'doctrine',
-            'd',
-            InputOption::VALUE_OPTIONAL,
-            "Hydrate to a Doctrine entity? If so, what is its name."
-        );
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $modulePath = getcwd() . DIRECTORY_SEPARATOR . 'module' . DIRECTORY_SEPARATOR;
+        $modulePath = $this->getModulePath();
 
         $helper = $this->getHelper('question');
-        $output->writeln("<fg=white;options=bold>Form Generation Guide\n</>");
+        $output->writeln("\n<fg=white;options=bold>Form Generation Guide</>");
 
 
         //
         // 1. Which module?
         //
-        $moduleQuestion = new Question("<fg=cyan;options=bold>(1/4) In which laminas-mvc module should your form be created? </>");
+        $moduleQuestion = new Question("<fg=green;options=bold>(1/4) In which laminas-mvc module should your form be created? </>");
         $moduleQuestion->setAutocompleterCallback(function (string $userInput) use ($modulePath): array {
             $moduleSearch = $modulePath . '*';
 
@@ -80,7 +52,7 @@ class CreateFormCommand extends Command
         //
         // 2. What form?
         //
-        $formQuestion = new Question("<fg=cyan;options=bold>(2/4) What is your form named? We will add the 'Form' suffix automatically: </>");
+        $formQuestion = new Question("<fg=green;options=bold>(2/4) What is your form named? We will add the 'Form' suffix automatically: </>");
         $formQuestion->setValidator(function (?string $answer) use ($modulePath) {
             if (!$answer) {
                 throw new \RuntimeException(
@@ -108,8 +80,8 @@ class CreateFormCommand extends Command
         //
         // 3. Doctrine Entity?
         //
-        $useDoctrineQuestion = new Question("<fg=cyan;options=bold>(3/4) Want to auto add Doctrine bindings? (y/N) </>");
-        $useDoctrineQuestion->setValidator(function (?string $answer) use ($modulePath) {
+        $useDoctrineQuestion = new Question("<fg=green;options=bold>(3/4) Want to auto add Doctrine bindings? (y/N) </>");
+        $useDoctrineQuestion->setValidator(function (?string $answer) {
             $answer = strtolower(trim($answer ?? ''));
             if (!$answer || $answer === 'n' || $answer === 'no') {
                 return false;
@@ -122,14 +94,12 @@ class CreateFormCommand extends Command
             throw new \RuntimeException("Hm? Not sure I got that. Please answer yes or no.");
         });
 
-        if (!$useDoctrine = $helper->ask($input, $output, $useDoctrineQuestion)) {
-            return Command::FAILURE;
-        }
+        $useDoctrine = $helper->ask($input, $output, $useDoctrineQuestion);
 
         //
         // 4. Hydrate a specific class?
         //
-        $hydratedClassQuestion = new Question("<fg=cyan;options=bold>(4/4) Did you want to hydrate a specific class? Enter for none</>");
+        $hydratedClassQuestion = new Question("<fg=green;options=bold>(4/4) Did you want to hydrate a specific class? Enter for none </>");
         $hydratedClass = $helper->ask($input, $output, $hydratedClassQuestion);
 
 
@@ -151,12 +121,8 @@ class CreateFormCommand extends Command
             }
         }
 
-        (new FormWriter($module, $formName, $useDoctrine, $hydratedClass))->write();
-
-        $output->writeln("<fg=green;options=bold>...form generation complete.</>");
+        $this->openFiles((new FormWriter($module, $formName, $useDoctrine, $hydratedClass))->write($output));
 
         return Command::SUCCESS;
     }
-
 }
-

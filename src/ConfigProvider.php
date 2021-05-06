@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Circlical\LaminasTools;
 
+use Circlical\LaminasTools\Command\CreateControllerCommand;
 use Circlical\LaminasTools\Command\CreateFormCommand;
+use Circlical\LaminasTools\Factory\AbstractCommandFactory;
 
 class ConfigProvider
 {
@@ -16,21 +18,24 @@ class ConfigProvider
         ];
     }
 
+
     public function getDependencies(): array
     {
-        return [];
+        return [
+            'abstract_factories' => [
+                AbstractCommandFactory::class,
+            ],
+        ];
     }
+
 
     public function getConsoleConfig(): array
     {
         return [
             'commands' => [
-                // formtool create [--doctrine|-d]:doctrine <module> <form> [<class>]
-                'ct:create-form' => CreateFormCommand::class,
+                'ct:form' => CreateFormCommand::class,
+                'ct:controller' => CreateControllerCommand::class,
             ],
         ];
     }
-
 }
-
-

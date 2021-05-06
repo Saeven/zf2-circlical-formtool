@@ -1,11 +1,13 @@
 {
   "name": "saeven/zf2-form-builder",
-  "description": "Command-line form generator for Laminas. Sparks joy.",
+  "description": "Powertools for much lazy with Laminas. Sparks joy.",
   "type": "library",
   "license": "MIT",
   "homepage": "https://github.com/Saeven/zf2-circlical-formtool",
   "keywords": [
     "laminas",
+    "utilities",
+    "tools",
     "generate",
     "form",
     "forms"

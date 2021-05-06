@@ -1,0 +1,8 @@
+parameters:
+  autoload_files:
+    - %rootDir%/../../../vendor/autoload.php
+  excludes_analyse:
+    - *module/*/bundle/Spec/*
+    - */Module.php
+  level: 4
+  ignoreErrors:
