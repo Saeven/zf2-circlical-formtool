@@ -27,12 +27,12 @@ class CreateControllerCommand extends AbstractCommand
         $modulePath = Utilities::getModulesFolder();
 
         $helper = $this->getHelper('question');
-        $output->writeln("\n<fg=white;options=bold>Controller Generation Guide</>");
+        $output->writeln("<fg=white;options=bold>Controller Generation Guide</>");
 
         //
         // 1. Which module?
         //
-        $moduleQuestion = new Question("\n<fg=green;options=bold>(1/3) In which laminas-mvc module should your controller be created? </>");
+        $moduleQuestion = new Question("<fg=green;options=bold>(1/3) In which laminas-mvc module should your controller be created? </>");
         $moduleQuestion->setAutocompleterCallback(function (string $userInput) use ($modulePath): array {
             $moduleSearch = $modulePath . '*';
 
@@ -59,7 +59,7 @@ class CreateControllerCommand extends AbstractCommand
         //
         // 2. What controller?
         //
-        $controllerQuestion = new Question("\n<fg=green;options=bold>(2/3) What is your controller named? We will add the 'Controller' suffix automatically: </>");
+        $controllerQuestion = new Question("<fg=green;options=bold>(2/3) What is your controller named? We will add the 'Controller' suffix automatically: </>");
         $controllerQuestion->setValidator(function (?string $answer) {
             if (!$answer) {
                 throw new \RuntimeException(
@@ -83,7 +83,7 @@ class CreateControllerCommand extends AbstractCommand
         //
         // 3. Doctrine Entity?
         //
-        $factoryQuestion = new Question("\n<fg=green;options=bold>(3/3) Do you want to write a factory as well? (y/N) </>");
+        $factoryQuestion = new Question("<fg=green;options=bold>(3/3) Do you want to write a factory as well? (y/N) </>");
         $factoryQuestion->setValidator(function (?string $answer) {
             $answer = strtolower(trim($answer ?? ''));
             if (!$answer || $answer === 'n' || $answer === 'no') {
