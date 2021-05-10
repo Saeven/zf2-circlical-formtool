@@ -9,4 +9,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 interface WriterInterface
 {
     public function write(OutputInterface $output): array;
+
+    public function setOptions(array $array): void;
 }

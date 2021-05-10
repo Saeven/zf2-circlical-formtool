@@ -10,20 +10,26 @@ use Laminas\Config\Writer\PhpArray;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class FormWriter implements WriterInterface
+final class FormWriter extends AbstractWriter implements WriterInterface
 {
+    public const RESOURCE_FORM = 'form';
+    public const RESOURCE_FACTORY = 'factory';
+    public const RESOURCE_FACTORY_DOCTRINE = 'doctrinefactory';
+    public const RESOURCE_FILTER = 'inputfilter';
+    public const RESOURCE_FILTER_FACTORY = 'inputfilterfactory';
+
     private string $module;
     private string $form;
     private ?string $hydrateClass;
     private bool $doctrine;
 
 
-    public function __construct(string $module, string $form, bool $doctrine, ?string $hydrateClass)
+    public function setOptions(array $options): void
     {
-        $this->module = $module;
-        $this->form = $form;
-        $this->hydrateClass = $hydrateClass;
-        $this->doctrine = $doctrine;
+        $this->module = $options['module'];
+        $this->form = $options['form'];
+        $this->hydrateClass = $options['hydrateClass'];
+        $this->doctrine = $options['useDoctrine'];
     }
 
 
@@ -55,7 +61,11 @@ final class FormWriter implements WriterInterface
             throw new \RuntimeException(sprintf('Directory "%s" could not be created; permissions issue?', $dir));
         }
 
-        $template = Utilities::parseTemplate('Form', ['MODULE', 'FORM'], [$this->module, $this->form]);
+        $template = Utilities::parseTemplate(
+            $this->getResourceTemplate(self::RESOURCE_FORM),
+            ['MODULE', 'FORM'],
+            [$this->module, $this->form]
+        );
         file_put_contents($formFile, $template, LOCK_EX);
         $table->addRow(['Form', '<fg=green;options=bold>created</>', Utilities::modulePath($formFile)]);
 
@@ -73,11 +83,13 @@ final class FormWriter implements WriterInterface
         }
 
         $template = Utilities::parseTemplate(
-            $this->doctrine ? 'DoctrineFormFactory' : 'FormFactory',
+            $this->getResourceTemplate(
+                $this->doctrine ? self::RESOURCE_FACTORY_DOCTRINE : self::RESOURCE_FACTORY
+            ),
             [
                 'HYDRATORFORM',
                 'DHYDRATORUSE',
-                'HYDRATORUSER',
+                'HYDRATORUSE',
                 'MODULE',
                 'FORM',
             ],
@@ -87,7 +99,6 @@ final class FormWriter implements WriterInterface
                 $this->hydrateClass ? 'use ' . $this->module . '\\Model\\' . $this->hydrateClass . ';' : '',
                 $this->module,
                 $this->form,
-
             ],
         );
 
@@ -107,7 +118,11 @@ final class FormWriter implements WriterInterface
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
 
-        $template = Utilities::parseTemplate('InputFilter', ['MODULE', 'FORM'], [$this->module, $this->form]);
+        $template = Utilities::parseTemplate(
+            $this->getResourceTemplate(self::RESOURCE_FILTER),
+            ['MODULE', 'FORM'],
+            [$this->module, $this->form]
+        );
         file_put_contents($inputFilterFile, $template, LOCK_EX);
         $table->addRow(['InputFilter', '<fg=green;options=bold>created</>', Utilities::modulePath($inputFilterFile)]);
 
@@ -124,7 +139,17 @@ final class FormWriter implements WriterInterface
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
 
-        $template = Utilities::parseTemplate('InputFilterFactory', ['MODULE', 'FORM'], [$this->module, $this->form]);
+        $template = Utilities::parseTemplate(
+            $this->getResourceTemplate(self::RESOURCE_FILTER_FACTORY),
+            [
+                'MODULE',
+                'FORM',
+            ],
+            [
+                $this->module,
+                $this->form,
+            ]
+        );
         file_put_contents($inputFilterFactoryFile, $template, LOCK_EX);
         $table->addRow(['InputFilter Factory', '<fg=green;options=bold>created</>', Utilities::modulePath($inputFilterFactoryFile)]);
 

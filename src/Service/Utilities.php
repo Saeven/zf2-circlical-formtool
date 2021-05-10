@@ -38,9 +38,17 @@ final class Utilities
     }
 
 
-    public static function parseTemplate(string $name, array $search, array $replace): string
+    public static function parseTemplate(string $file, array $search, array $replace): string
     {
-        return str_replace($search, $replace, file_get_contents(__DIR__ . '/../Resources/' . $name . '.txt'));
+        if (!is_file($file)) {
+            throw new \RuntimeException("A template file could not be found at: $file");
+        }
+
+        return str_replace(
+            $search,
+            $replace,
+            file_get_contents($file)
+        );
     }
 
 

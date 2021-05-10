@@ -121,8 +121,20 @@ class CreateFormCommand extends AbstractCommand
             }
         }
 
-        $this->openFiles((new FormWriter($module, $formName, $useDoctrine, $hydratedClass))->write($output));
+        $this->writer->setOptions([
+            'module' => $module,
+            'form' => $formName,
+            'hydrateClass' => $hydratedClass,
+            'useDoctrine' => $useDoctrine,
+        ]);
+
+        $this->openFiles($this->writer->write($output));
 
         return Command::SUCCESS;
+    }
+
+    public static function getWriterService(): string
+    {
+        return FormWriter::class;
     }
 }

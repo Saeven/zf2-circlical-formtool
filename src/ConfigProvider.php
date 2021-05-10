@@ -6,7 +6,8 @@ namespace Circlical\LaminasTools;
 
 use Circlical\LaminasTools\Command\CreateControllerCommand;
 use Circlical\LaminasTools\Command\CreateFormCommand;
-use Circlical\LaminasTools\Factory\AbstractCommandFactory;
+use Circlical\LaminasTools\Factory\Command\AbstractCommandFactory;
+use Circlical\LaminasTools\Factory\Service\AbstractWriterFactory;
 
 class ConfigProvider
 {
@@ -24,6 +25,7 @@ class ConfigProvider
         return [
             'abstract_factories' => [
                 AbstractCommandFactory::class,
+                AbstractWriterFactory::class,
             ],
         ];
     }

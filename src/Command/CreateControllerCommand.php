@@ -99,8 +99,19 @@ class CreateControllerCommand extends AbstractCommand
 
         $factory = $helper->ask($input, $output, $factoryQuestion);
 
-        $this->openFiles((new ControllerWriter($module, $controllerName, $factory))->write($output));
+        $this->writer->setOptions([
+            'module' => $module,
+            'controller' => $controllerName,
+            'writeFactory' => $factory,
+        ]);
+
+        $this->openFiles($this->writer->write($output));
 
         return Command::SUCCESS;
+    }
+
+    public static function getWriterService(): string
+    {
+        return ControllerWriter::class;
     }
 }

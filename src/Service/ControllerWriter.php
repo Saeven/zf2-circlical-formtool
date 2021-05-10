@@ -10,20 +10,23 @@ use Laminas\Config\Writer\PhpArray;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class ControllerWriter implements WriterInterface
+final class ControllerWriter extends AbstractWriter implements WriterInterface
 {
-    private string $module;
+    public const RESOURCE_CONTROLLER = 'controller';
+    public const RESOURCE_FACTORY = 'factory';
 
-    private string $controllerName;
+    private ?string $module;
 
-    private bool $writeFactory;
+    private ?string $controllerName;
+
+    private ?bool $writeFactory;
 
 
-    public function __construct(string $module, string $controllerName, bool $writeFactory)
+    public function setOptions(array $options): void
     {
-        $this->module = $module;
-        $this->controllerName = $controllerName;
-        $this->writeFactory = $writeFactory;
+        $this->module = $options['module'];
+        $this->controllerName = $options['controller'];
+        $this->writeFactory = $options['writeFactory'];
     }
 
     /**
@@ -62,7 +65,11 @@ final class ControllerWriter implements WriterInterface
             throw new \RuntimeException(sprintf('Directory "%s" could not be created; permissions issue?', $dir));
         }
 
-        $template = Utilities::parseTemplate('Controller', ['MODULE', 'CONTROLLER'], [$this->module, $this->controllerName]);
+        $template = Utilities::parseTemplate(
+            $this->getResourceTemplate(self::RESOURCE_CONTROLLER),
+            ['MODULE', 'CONTROLLER'],
+            [$this->module, $this->controllerName]
+        );
         file_put_contents($controllerFile, $template, LOCK_EX);
         $table->addRow(['Controller', '<fg=green;options=bold>created</>', Utilities::modulePath($controllerFile)]);
 
@@ -89,7 +96,11 @@ final class ControllerWriter implements WriterInterface
             throw new \RuntimeException(sprintf('Directory "%s" could not be created; permissions issue?', $dir));
         }
 
-        $template = Utilities::parseTemplate('ControllerFactory', ['MODULE', 'CONTROLLER'], [$this->module, $this->controllerName]);
+        $template = Utilities::parseTemplate(
+            $this->getResourceTemplate(self::RESOURCE_FACTORY),
+            ['MODULE', 'CONTROLLER'],
+            [$this->module, $this->controllerName]
+        );
         file_put_contents($dir . "/{$this->controllerName}ControllerFactory.php", $template, LOCK_EX);
         $table->addRow(['Factory', '<fg=green;options=bold>created</>', Utilities::modulePath($controllerFactoryFile)]);
 
