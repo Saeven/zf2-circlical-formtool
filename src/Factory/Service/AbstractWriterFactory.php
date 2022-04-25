@@ -2,13 +2,8 @@
 
 namespace Circlical\LaminasTools\Factory\Service;
 
-use Circlical\LaminasTools\Service\ControllerWriter;
 use Interop\Container\ContainerInterface;
-use Interop\Container\Exception\ContainerException;
-use Laminas\ServiceManager\Exception\ServiceNotCreatedException;
-use Laminas\ServiceManager\Exception\ServiceNotFoundException;
 use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
-use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class AbstractWriterFactory implements AbstractFactoryInterface
 {
@@ -17,7 +12,7 @@ class AbstractWriterFactory implements AbstractFactoryInterface
         return preg_match('/^Circlical\\\\LaminasTools\\\\Service\\\\(.*?)Writer$/uix', $requestedName);
     }
 
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $config = $container->get('config');
 
