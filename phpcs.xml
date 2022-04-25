@@ -1,16 +1,31 @@
 <?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
 
-<ruleset>
-
-    <arg name="extensions" value="php"/>
-    <arg name="cache" value=".phpcs-cache"/>
-    <arg name="parallel" value="80"/>
+    <arg name="basepath" value="."/>
+    <arg name="cache" value="tmp/.phpcs-cache"/>
     <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="80"/>
 
-    <description>PHPCS configuration file.</description>
+    <!-- Show progress -->
+    <arg value="p"/>
+
+    <!-- Paths to check -->
     <file>module</file>
 
-    <rule ref="PSR12"/>
+    <exclude-pattern>**Spec.php</exclude-pattern>
+
+    <!-- Include all rules from the Laminas Coding Standard -->
+    <rule ref="LaminasCodingStandard">
+        <exclude name="Generic.Formatting.MultipleStatementAlignment"/>
+        <exclude name="Generic.Formatting.SpaceAfterNot"/>
+        <exclude name="WebimpressCodingStandard.Arrays.DoubleArrow"/>
+        <exclude name="SlevomatCodingStandard.Commenting.EmptyComment.EmptyComment"/>
+        <exclude name="WebimpressCodingStandard.Formatting.Reference.UnexpectedSpace"/>
+        <exclude name="WebimpressCodingStandard.NamingConventions.ValidVariableName.NotCamelCaps"/>
+    </rule>
+
     <rule ref="Generic.Files.LineLength">
         <properties>
             <property name="lineLimit" value="220"/>
@@ -18,13 +33,17 @@
         </properties>
     </rule>
 
-    <rule ref="Squiz.WhiteSpace.FunctionSpacing">
-        <properties>
-            <property name="spacing" value="2"/>
-            <property name="spacingBeforeFirst" value="0"/>
-            <property name="spacingAfterLast" value="0"/>
-        </properties>
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint">
+        <exclude-pattern>**Factory.php</exclude-pattern>
     </rule>
 
-    <exclude-pattern>module/*/bundle/**</exclude-pattern>
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
+        <exclude-pattern>**Factory.php</exclude-pattern>
+    </rule>
+
+    <rule ref="WebimpressCodingStandard.NamingConventions.ValidVariableName.NotCamelCapsProperty">
+        <exclude-pattern>**/Entity/**</exclude-pattern>
+    </rule>
+
+
 </ruleset>
