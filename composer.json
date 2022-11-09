@@ -1,6 +1,6 @@
 {
   "name": "saeven/zf2-form-builder",
-  "description": "Powertools for much lazy with Laminas. Sparks joy.",
+  "description": "Powertools for much lazy with Laminas because I hate writing Controllers, Forms, InputFilters, their Factories, and you hate writing all that stuff too.",
   "type": "library",
   "license": "MIT",
   "homepage": "https://github.com/Saeven/zf2-circlical-formtool",
