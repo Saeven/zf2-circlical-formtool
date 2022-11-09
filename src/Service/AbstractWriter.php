@@ -10,7 +10,6 @@ class AbstractWriter
 
     protected function getResourceTemplate(string $type): string
     {
-        var_dump( "template for $type is {$this->resourceTemplates[static::class][$type]}");
         return $this->resourceTemplates[static::class][$type];
     }
 
@@ -18,5 +17,4 @@ class AbstractWriter
     {
         $this->resourceTemplates = $resourceTemplates;
     }
-
 }

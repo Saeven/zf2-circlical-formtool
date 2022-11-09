@@ -1,12 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MODULE\Form;
 
-use Laminas\Form\Element;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
-use Laminas\Form\Element\Button;
-use Laminas\Form\Element\Hidden;
 
 class FORMForm extends Form
 {

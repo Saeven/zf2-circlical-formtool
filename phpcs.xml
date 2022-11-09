@@ -12,9 +12,11 @@
     <arg value="p"/>
 
     <!-- Paths to check -->
-    <file>module</file>
+    <file>src</file>
 
     <exclude-pattern>**Spec.php</exclude-pattern>
+    <exclude-pattern>module/*/bundle/**</exclude-pattern>
+    <exclude-pattern>module/*/fixtures/**</exclude-pattern>
 
     <!-- Include all rules from the Laminas Coding Standard -->
     <rule ref="LaminasCodingStandard">

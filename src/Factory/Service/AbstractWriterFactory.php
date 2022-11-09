@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Circlical\LaminasTools\Factory\Service;
 
-use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
+use Psr\Container\ContainerInterface;
+
+use function preg_match;
 
 class AbstractWriterFactory implements AbstractFactoryInterface
 {
@@ -21,4 +25,3 @@ class AbstractWriterFactory implements AbstractFactoryInterface
         );
     }
 }
-

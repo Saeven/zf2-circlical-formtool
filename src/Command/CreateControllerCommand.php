@@ -6,13 +6,26 @@ namespace Circlical\LaminasTools\Command;
 
 use Circlical\LaminasTools\Service\ControllerWriter;
 use Circlical\LaminasTools\Service\Utilities;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
+use function array_map;
+use function glob;
+use function is_dir;
+use function sprintf;
+use function str_replace;
+use function stripos;
+use function strtolower;
+use function trim;
+
+use const GLOB_ONLYDIR;
+
 class CreateControllerCommand extends AbstractCommand
 {
+    /** @var string */
     protected static $defaultName = "ct:create-controller";
 
     protected function configure()
@@ -22,6 +35,9 @@ class CreateControllerCommand extends AbstractCommand
         $this->setHelp("Wires a controller for you, and optionally generates a Factory for it as well.");
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $modulePath = Utilities::getModulesFolder();
@@ -42,18 +58,18 @@ class CreateControllerCommand extends AbstractCommand
         });
         $moduleQuestion->setValidator(function (?string $answer) use ($modulePath) {
             if (!$answer) {
-                throw new \RuntimeException('A laminas-mvc module name is required.');
+                throw new RuntimeException('A laminas-mvc module name is required.');
             }
 
             if (!is_dir($modulePath . $answer)) {
-                throw new \RuntimeException(sprintf("The module with name '%s' could not be found.", $answer));
+                throw new RuntimeException(sprintf("The module with name '%s' could not be found.", $answer));
             }
 
             return $answer;
         });
 
         if (!$module = $helper->ask($input, $output, $moduleQuestion)) {
-            throw new \RuntimeException("A module name is required.");
+            throw new RuntimeException("A module name is required.");
         }
 
         //
@@ -62,13 +78,13 @@ class CreateControllerCommand extends AbstractCommand
         $controllerQuestion = new Question("<fg=green;options=bold>(2/3) What is your controller named? We will add the 'Controller' suffix automatically: </>");
         $controllerQuestion->setValidator(function (?string $answer) {
             if (!$answer) {
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     "A controller name is required."
                 );
             }
 
             if (stripos($answer, 'Controller') !== false) {
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     "Don't include the word 'Controller' in your form name, I'll take care of that."
                 );
             }
@@ -77,7 +93,7 @@ class CreateControllerCommand extends AbstractCommand
         });
 
         if (!$controllerName = $helper->ask($input, $output, $controllerQuestion)) {
-            throw new \RuntimeException("A valid controller name is required.");
+            throw new RuntimeException("A valid controller name is required.");
         }
 
         //
@@ -94,7 +110,7 @@ class CreateControllerCommand extends AbstractCommand
                 return true;
             }
 
-            throw new \RuntimeException("Hm? Not sure I got that. Please answer yes or no.");
+            throw new RuntimeException("Hm? Not sure I got that. Please answer yes or no.");
         });
 
         $factory = $helper->ask($input, $output, $factoryQuestion);

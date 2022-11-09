@@ -7,8 +7,17 @@ namespace Circlical\LaminasTools\Service;
 use Circlical\LaminasTools\Provider\WriterInterface;
 use Laminas\Config\Config;
 use Laminas\Config\Writer\PhpArray;
+use RuntimeException;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\OutputInterface;
+
+use function file_put_contents;
+use function is_dir;
+use function is_file;
+use function mkdir;
+use function sprintf;
+
+use const LOCK_EX;
 
 final class FormWriter extends AbstractWriter implements WriterInterface
 {
@@ -23,7 +32,6 @@ final class FormWriter extends AbstractWriter implements WriterInterface
     private ?string $hydrateClass;
     private bool $doctrine;
 
-
     public function setOptions(array $options): void
     {
         $this->module = $options['module'];
@@ -31,7 +39,6 @@ final class FormWriter extends AbstractWriter implements WriterInterface
         $this->hydrateClass = $options['hydrateClass'];
         $this->doctrine = $options['useDoctrine'];
     }
-
 
     public function write(OutputInterface $output): array
     {
@@ -51,14 +58,13 @@ final class FormWriter extends AbstractWriter implements WriterInterface
         return $files;
     }
 
-
     private function generateForm(Table $table): string
     {
         $dir = Utilities::getSourceFolderForModule($this->module, ['Form']);
         $formFile = $dir . "{$this->form}Form.php";
 
         if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
-            throw new \RuntimeException(sprintf('Directory "%s" could not be created; permissions issue?', $dir));
+            throw new RuntimeException(sprintf('Directory "%s" could not be created; permissions issue?', $dir));
         }
 
         $template = Utilities::parseTemplate(
@@ -72,14 +78,13 @@ final class FormWriter extends AbstractWriter implements WriterInterface
         return $formFile;
     }
 
-
     private function generateFormFactory(Table $table): string
     {
         $dir = Utilities::getSourceFolderForModule($this->module, ['Factory', 'Form']);
         $formFactoryFile = $dir . "{$this->form}FormFactory.php";
 
         if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
 
         $template = Utilities::parseTemplate(
@@ -108,14 +113,13 @@ final class FormWriter extends AbstractWriter implements WriterInterface
         return $formFactoryFile;
     }
 
-
     private function generateInputFilter(Table $table): string
     {
         $dir = Utilities::getSourceFolderForModule($this->module, ['InputFilter']);
         $inputFilterFile = $dir . "{$this->form}InputFilter.php";
 
         if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
 
         $template = Utilities::parseTemplate(
@@ -129,14 +133,13 @@ final class FormWriter extends AbstractWriter implements WriterInterface
         return $inputFilterFile;
     }
 
-
     private function generateInputFilterFactory(Table $table): string
     {
         $dir = Utilities::getSourceFolderForModule($this->module, ['Factory', 'InputFilter']);
         $inputFilterFactoryFile = $dir . "{$this->form}InputFilterFactory.php";
 
         if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
 
         $template = Utilities::parseTemplate(
@@ -156,7 +159,6 @@ final class FormWriter extends AbstractWriter implements WriterInterface
         return $inputFilterFactoryFile;
     }
 
-
     private function writeConfig(): void
     {
         //
@@ -169,7 +171,7 @@ final class FormWriter extends AbstractWriter implements WriterInterface
         );
 
         if (!@mkdir($formConfigDirectory, 0755, true) && !is_dir($formConfigDirectory)) {
-            throw new \RuntimeException(sprintf('Directory "%s" could not be created', $formConfigDirectory));
+            throw new RuntimeException(sprintf('Directory "%s" could not be created', $formConfigDirectory));
         }
 
         $formConfigFile = $formConfigDirectory . "forms.config.php";

@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MODULE\Factory\Controller;
 
-use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
 use MODULE\Controller\CONTROLLERController;
 
 class CONTROLLERControllerFactory implements FactoryInterface

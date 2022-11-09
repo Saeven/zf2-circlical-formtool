@@ -19,7 +19,6 @@ class ConfigProvider
         ];
     }
 
-
     public function getDependencies(): array
     {
         return [
@@ -29,7 +28,6 @@ class ConfigProvider
             ],
         ];
     }
-
 
     public function getConsoleConfig(): array
     {

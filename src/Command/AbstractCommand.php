@@ -7,6 +7,12 @@ namespace Circlical\LaminasTools\Command;
 use Circlical\LaminasTools\Provider\WriterInterface;
 use Symfony\Component\Console\Command\Command;
 
+use function getcwd;
+use function shell_exec;
+use function sprintf;
+
+use const DIRECTORY_SEPARATOR;
+
 abstract class AbstractCommand extends Command
 {
     private ?string $editCommand;
@@ -38,4 +44,3 @@ abstract class AbstractCommand extends Command
         }
     }
 }
-

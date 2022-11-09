@@ -4,20 +4,31 @@ declare(strict_types=1);
 
 namespace Circlical\LaminasTools\Service;
 
+use RuntimeException;
+
+use function file_get_contents;
+use function getcwd;
+use function implode;
+use function is_file;
+use function sprintf;
+use function str_replace;
+use function strpos;
+use function substr;
+
+use const DIRECTORY_SEPARATOR;
+
 final class Utilities
 {
     private static ?string $modulesFolder = null;
 
-
     public static function getModulesFolder(): string
     {
-        if (!static::$modulesFolder) {
-            static::$modulesFolder = getcwd() . DIRECTORY_SEPARATOR . 'module' . DIRECTORY_SEPARATOR;
+        if (!self::$modulesFolder) {
+            self::$modulesFolder = getcwd() . DIRECTORY_SEPARATOR . 'module' . DIRECTORY_SEPARATOR;
         }
 
-        return static::$modulesFolder;
+        return self::$modulesFolder;
     }
-
 
     /**
      * Get yourself a path to some src, with trailing slash.
@@ -26,7 +37,7 @@ final class Utilities
     {
         $folder = sprintf(
             "%s%s/src/",
-            static::getModulesFolder(),
+            self::getModulesFolder(),
             $moduleName
         );
 
@@ -37,11 +48,10 @@ final class Utilities
         return $folder;
     }
 
-
     public static function parseTemplate(string $file, array $search, array $replace): string
     {
         if (!is_file($file)) {
-            throw new \RuntimeException("A template file could not be found at: $file");
+            throw new RuntimeException("A template file could not be found at: $file");
         }
 
         return str_replace(
@@ -50,7 +60,6 @@ final class Utilities
             file_get_contents($file)
         );
     }
-
 
     /**
      * Return what follows module/

@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Circlical\LaminasTools;
 
-class Module
+use Laminas\ModuleManager\Feature\ConfigProviderInterface;
+
+use function array_merge;
+
+class Module implements ConfigProviderInterface
 {
     public function getConfig(): array
     {

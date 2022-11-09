@@ -1,22 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MODULE\Factory\Form;
 
 DHYDRATORUSE
 use MODULE\Form\FORMForm;
 use MODULE\InputFilter\FORMInputFilter;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
+use Doctrine\Laminas\Hydrator\DoctrineObject as DoctrineHydrator;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class FORMFormFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    /**
+     * @inheritDoc
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
-        $form = new FORMForm('FORMForm', $options);
-        $form->setHydrator(new DoctrineObject($container->get('doctrine.entitymanager.orm_default'), false));
-        $form->setInputFilter($container->get('InputFilterManager')->get(FORMInputFilter::class, $options));
-
-        return $form;
+        return (new FORMForm('FORMForm', $options))
+            ->setHydrator(new DoctrineHydrator($container->get('doctrine.entitymanager.orm_default'), false))
+            ->setInputFilter($container->get('InputFilterManager')->get(FORMInputFilter::class, $options));
     }
 }

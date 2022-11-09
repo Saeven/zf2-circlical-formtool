@@ -7,8 +7,17 @@ namespace Circlical\LaminasTools\Service;
 use Circlical\LaminasTools\Provider\WriterInterface;
 use Laminas\Config\Config;
 use Laminas\Config\Writer\PhpArray;
+use RuntimeException;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\OutputInterface;
+
+use function file_put_contents;
+use function is_dir;
+use function is_file;
+use function mkdir;
+use function sprintf;
+
+use const LOCK_EX;
 
 final class ControllerWriter extends AbstractWriter implements WriterInterface
 {
@@ -16,11 +25,8 @@ final class ControllerWriter extends AbstractWriter implements WriterInterface
     public const RESOURCE_FACTORY = 'factory';
 
     private ?string $module;
-
     private ?string $controllerName;
-
     private ?bool $writeFactory;
-
 
     public function setOptions(array $options): void
     {
@@ -49,7 +55,6 @@ final class ControllerWriter extends AbstractWriter implements WriterInterface
         return $files;
     }
 
-
     private function generateController(Table $table): ?string
     {
         $dir = Utilities::getSourceFolderForModule($this->module, ['Controller']);
@@ -62,7 +67,7 @@ final class ControllerWriter extends AbstractWriter implements WriterInterface
         }
 
         if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
-            throw new \RuntimeException(sprintf('Directory "%s" could not be created; permissions issue?', $dir));
+            throw new RuntimeException(sprintf('Directory "%s" could not be created; permissions issue?', $dir));
         }
 
         $template = Utilities::parseTemplate(
@@ -75,7 +80,6 @@ final class ControllerWriter extends AbstractWriter implements WriterInterface
 
         return $controllerFile;
     }
-
 
     private function generateFactory(Table $table): ?string
     {
@@ -93,7 +97,7 @@ final class ControllerWriter extends AbstractWriter implements WriterInterface
         }
 
         if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
-            throw new \RuntimeException(sprintf('Directory "%s" could not be created; permissions issue?', $dir));
+            throw new RuntimeException(sprintf('Directory "%s" could not be created; permissions issue?', $dir));
         }
 
         $template = Utilities::parseTemplate(
@@ -107,7 +111,6 @@ final class ControllerWriter extends AbstractWriter implements WriterInterface
         return $controllerFactoryFile;
     }
 
-
     private function writeConfig(Table $table): void
     {
         $configDirectory = sprintf(
@@ -117,7 +120,7 @@ final class ControllerWriter extends AbstractWriter implements WriterInterface
         );
 
         if (!@mkdir($configDirectory, 0755, true) && !is_dir($configDirectory)) {
-            throw new \RuntimeException(sprintf('Directory "%s" could not be created', $configDirectory));
+            throw new RuntimeException(sprintf('Directory "%s" could not be created', $configDirectory));
         }
 
         $configFile = $configDirectory . "controllers.config.php";

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MODULE\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -8,6 +10,5 @@ class CONTROLLERController extends AbstractActionController
 {
     public function __construct()
     {
-
     }
 }

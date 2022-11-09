@@ -1,21 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MODULE\Factory\Form;
 
 use MODULE\Form\FORMForm;
 use MODULE\InputFilter\FORMInputFilter;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
-use Laminas\Hydrator\ClassMethods;
+use Psr\Container\ContainerInterface;
 
 class FORMFormFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $form = new FORMForm('FORM');
-        $form->setHydrator(new ClassMethods());
-        $form->setInputFilter($container->get('InputFilterManager')->get(FORMInputFilter::class, $options));
-
-        return $form;
+        return (new FORMForm('FORM'))
+            ->setInputFilter($container->get('InputFilterManager')->get(FORMInputFilter::class, $options));
     }
 }
